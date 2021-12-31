@@ -55,6 +55,15 @@ public class Enemy : MonoBehaviour
         _healthBar.transform.parent = transform;
     }
 
+    public void ReduceEnemyHealth(int damage)
+    {
+        _currentHealth -= damage;
+        if(_currentHealth <= 0)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
     public void SetCurrentPathIndex(int currentIndex)
     {
         CurrentPathIndex = currentIndex;

@@ -72,6 +72,12 @@ PrefabInstance:
       propertyPath: _bulletSplashRadius
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8609911644938857515, guid: 83feda19bd2eab846be6e1f52846495f,
+        type: 3}
+      propertyPath: _bulletPrefab
+      value: 
+      objectReference: {fileID: 7344732483508747983, guid: dc13b66f33a73514f9207c3b7ba575e0,
+        type: 3}
     - target: {fileID: 8609911644938857558, guid: 83feda19bd2eab846be6e1f52846495f,
         type: 3}
       propertyPath: m_Name

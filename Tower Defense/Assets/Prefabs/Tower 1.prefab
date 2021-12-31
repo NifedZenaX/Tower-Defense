@@ -72,6 +72,12 @@ PrefabInstance:
       propertyPath: _shootDelay
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8609911644938857515, guid: 83feda19bd2eab846be6e1f52846495f,
+        type: 3}
+      propertyPath: _bulletPrefab
+      value: 
+      objectReference: {fileID: 3785757893266193707, guid: 269c776f5a61dba478795bb5a925ae87,
+        type: 3}
     - target: {fileID: 8609911644938857558, guid: 83feda19bd2eab846be6e1f52846495f,
         type: 3}
       propertyPath: m_Name
