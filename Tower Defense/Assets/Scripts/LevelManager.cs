@@ -1,6 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -17,6 +18,14 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    [SerializeField] private int _maxLives = 3;
+    [SerializeField] private int _totalEnemy = 15;
+
+    [SerializeField] private GameObject _panel;
+    [SerializeField] private Text _statusInfo;
+    [SerializeField] private Text _livesInfo;
+    [SerializeField] private Text _totalEnemyInfo;
+
     [SerializeField] private Transform _towerUIParent;
     [SerializeField] private GameObject _towerUIPrefab;
 
@@ -30,15 +39,29 @@ public class LevelManager : MonoBehaviour
     private List<Enemy> _spawnedEnemies = new List<Enemy>();
     private List<Bullet> _spawnedBullets = new List<Bullet>();
 
+    private int _currentLives;
+    private int _enemyCounter;
     private float _runningSpawnDelay;
+
+    public bool IsOver { get; private set; }
 
     private void Start()
     {
+        SetCurrentLives(_maxLives);
+        SetTotalEnemy(_totalEnemy);
         InstantiateAllTowerUI();
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        if (IsOver)
+        {
+            return;
+        }
         _runningSpawnDelay -= Time.unscaledDeltaTime;
         if(_runningSpawnDelay <= 0f)
         {
@@ -95,6 +118,16 @@ public class LevelManager : MonoBehaviour
 
     private void SpawnEnemy()
     {
+        SetTotalEnemy(--_enemyCounter);
+        if(_enemyCounter < 0)
+        {
+            bool isAllEnemyDestroyed = _spawnedEnemies.Find(e => e.gameObject.activeSelf) == null;
+            if (isAllEnemyDestroyed)
+            {
+                SetGameOver(true);
+            }
+            return;
+        }
         int randomIndex = Random.Range(0, _enemyPrefabs.Length);
         string enemyIndexString = (randomIndex + 1).ToString();
         GameObject newEnemyObj = _spawnedEnemies.Find(e => !e.gameObject.activeSelf && e.name.Contains(enemyIndexString))?.gameObject;
@@ -140,6 +173,34 @@ public class LevelManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ReduceLives(int value)
+    {
+        SetCurrentLives(_currentLives - value);
+        if(_currentLives <= 0)
+        {
+            SetGameOver(false);
+        }
+    }
+
+    public void SetCurrentLives(int currentLives)
+    {
+        _currentLives = Mathf.Max(currentLives, 0);
+        _livesInfo.text = $"Lives: {_currentLives}";
+    }
+
+    public void SetTotalEnemy(int totalEnemy)
+    {
+        _enemyCounter = totalEnemy;
+        _totalEnemyInfo.text = $"Total Enemy: {Mathf.Max(_enemyCounter, 0)}";
+    }
+
+    public void SetGameOver(bool isWin)
+    {
+        IsOver = true;
+        _statusInfo.text = isWin ? "You Win!" : "You Lose!";
+        _panel.gameObject.SetActive(true);
     }
 
     //private void OnDrawGizmos()
